@@ -1,0 +1,64 @@
+/* Basic styling for the chatbot container */
+*{
+    margin-top: 10px;
+}
+body{
+    align-items: center;
+    display: flex;
+    justify-content:center;
+    /* background: radial-gradient(circle, #5c0067 0%, #00d4ff 100%); */
+}
+.card {
+    width: 500px;
+    height: 90vh;
+    background-color: rgba(255, 255, 255, 0.42);
+    padding: 10px;
+    color: #000;
+    border-radius: 9px;
+    /* backdrop-filter: blur(50px); */
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    box-shadow: 10px 10px 10px 10px rgba(45, 55, 68, 0.3);
+    line-height: 1.5;
+    transform: translateY(-5%);
+    transition: transform 0.5s;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Styling for chatbot header */
+.header {
+    font-size: 1.5rem;
+    text-align: center;
+}
+.screen{
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.01);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(35,35,35,0.1);
+    color: #232323;
+    font-size: 35px;
+    overflow: hidden;
+    text-align:right;
+    width: 220px;
+    height: 50px;
+
+}
+.screen_status{
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.01);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(35,35,35,0.1);
+    color: #232323;
+    overflow: hidden;
+    font-size:small;
+    text-align: left;
+    width: 500px;
+    height: 100px;
+
+}
+.btn btn-primary{
+    background-color:rgb(29, 224, 29);
+}
+
+
+
