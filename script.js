@@ -1,4 +1,4 @@
-const api_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbHVlIjoiNjVjYzg5MGUxNDBjZmQ3MjNkYTk5YzVhIiwiaWF0IjoxNzA3OTAzMjQ2LCJleHAiOjMzMjEyMzY3MjQ2fQ.kskaa0ChRD0BzQw66q4hNBiiA3j6fCM2zHDR6zuvD1o";
+const api_key = ""; //Generate a API key from https://taapi.io/ insert it into within the quotes
 const coin_out = document.getElementById("coin_w");
 const usdt_out = document.getElementById("usdt_w");
 const status_out = document.getElementById("status");
@@ -37,11 +37,10 @@ function start(){
     const selectedCoin = coinSelect.value;
     const selectedIndicator = indicatorSelect.value;
     const selectedStrategy = strategySelect.value;
-    console.log(selectedStrategy);
+    
     status_out.innerText = `Starting ...`;
     if(selectedStrategy == "grid"){
         gridStrategy(selectedIndicator, selectedCoin);
-        
     }
     else{
         clearInterval(intervalId);
@@ -49,13 +48,10 @@ function start(){
             normalStrategy(selectedIndicator, selectedCoin);
         }, 60000);
     }
-    
-    
-    
 }
 
-async function call(coin, i) {
-    const url = `https://api.taapi.io/${i}?secret=${api_key}&exchange=binance&symbol=${coin}/USDT&interval=1m`;
+async function call(coin, ind) {
+    const url = `https://api.taapi.io/${ind}?secret=${api_key}&exchange=binance&symbol=${coin}/USDT&interval=1m`;
     try {
         const response = await fetch(url);
         const data = await response.json();
@@ -105,15 +101,15 @@ async function Decide(rsi) {
 
 async function normalStrategy(ind , sym){
     try {
-        const c_value = sym;
-        const i_value = ind;
-        const rsi_v = await call(c_value , i_value);
-        console.log(rsi_v);
-        let result = await Decide(rsi_v);
-        console.log(result);
-        let l_char = result.substring(result.length - 1);
+        const coinValue = sym;
+        const indValue = ind;
+        const rsiValue = await call(coinValue , indValue);
+        
+        let result = await Decide(rsiValue);
+        
+        let lastChar = result.substring(result.length - 1);
         let per = parseInt(result.substring(0, result.length - 1));
-        if (l_char == "b") {
+        if (lastChar == "b") {
             if (per == 0) {
                 status_out.innerText = `This is inappropriate time to buy/sell.\nCurrent RSI value = ${rsi_v}`;
                 
@@ -122,9 +118,9 @@ async function normalStrategy(ind , sym){
                 if (wallet.usdt != 0){
                     console.log(wallet.usdt);
                     setTimeout(async () => {
-                        let price_v = await call(c_value, "price");
-                        status_out.innerText = `Trade is executed at ${price_v}`;
-                        wallet.coin += (wallet.usdt * (per / 100)) / price_v;
+                        let priceValue = await call(coinValue, "price");
+                        status_out.innerText = `Trade is executed at ${priceValue}`;
+                        wallet.coin += (wallet.usdt * (per / 100)) / priceValue;
                         wallet.usdt -= (wallet.usdt * (per / 100));
                         usdt_out.innerText = wallet.usdt;
                         coin_out.innerText = wallet.coin;
@@ -137,11 +133,11 @@ async function normalStrategy(ind , sym){
             }
         } else {
             if(wallet.coin !=0){
-                status_out.innerText = `Sell Order.\nCurrent RSI value = ${rsi_v}`;
+                status_out.innerText = `Sell Order.\nCurrent RSI value = ${rsiValue}`;
                 setTimeout(async () => {
-                    let price_v = await call(c_value, "price");
-                    status_out.innerText = `Trade is executed at ${price_v}`;
-                    wallet.usdt += price_v * (wallet.coin * (per / 100));
+                    let priceValue = await call(coinValue, "price");
+                    status_out.innerText = `Trade is executed at ${priceValue}`;
+                    wallet.usdt += priceValue * (wallet.coin * (per / 100));
                     wallet.coin -= (wallet.coin * (per / 100));
                     usdt_out.innerText = wallet.usdt;
                     coin_out.innerText = wallet.coin;
@@ -149,7 +145,7 @@ async function normalStrategy(ind , sym){
                 
             }
             else{
-                status_out.innerText = `Insufficient coin in ${c_value} wallet.`;
+                status_out.innerText = `Insufficient coin in ${coinValue} wallet.`;
             }
             
         }
@@ -193,10 +189,10 @@ async function Decide_Grid(rsi) {
     }
 }
 
-async function call_Grid(coin, i) {
+async function call_Grid(coin, ind) {
     try {
         var interval = "5m";
-        if(i == "rsi"){
+        if(ind == "rsi"){
             interval = "1d";
         }
         const url = `https://api.taapi.io/${i}?secret=${api_key}&exchange=binance&symbol=${coin}/USDT&interval=${interval}`;
@@ -212,20 +208,20 @@ async function call_Grid(coin, i) {
     }
 }
 
-async function action(c_value){
+async function action(coinValue){
     setTimeout(async() => {status_out.innerText = "Loading ...";},1000);
     
     let buy_trades = [];
     setTimeout(async() => {
         
-        var price =  await call_Grid(c_value,"price");
+        var price =  await call_Grid(coinValue,"price");
         for (let j = 0; j< noOfGrids;j++){
             if(grid[j] < price){
                 buy_trades.push(grid[j])
             }
         }
         var kTemp = buy_trades.length;
-        console.log("kTemp",kTemp);
+        
         wallet.usdt +=  (kTemp - k) * 100;
         wallet.coin -= (kTemp - k) * 100/ price;
         if(kTemp > k){
@@ -244,17 +240,16 @@ async function action(c_value){
 
 
 async function gridStrategy(ind , sym){
-    const c_value = sym;
-    const i_value = ind;
-    const rsi_v = await call_Grid(c_value , i_value);
-    var result =  await Decide_Grid(rsi_v);
+    const coinValue = sym;
+    const indValue = ind;
+    const rsiValue = await call_Grid(coinValue , indValue);
+    var result =  await Decide_Grid(rsiValue);
     let perMin = parseInt(result.substring(0, 2))/100;
     let perMax = parseInt(result.substring(2,4))/100;
     status_out.innerText = "Calculating Grid ...";
     setTimeout(async () => {
-        var price =  await call_Grid(c_value,"price");
+        var price =  await call_Grid(coinValue,"price");
         minRange = price - (price*perMin);
-        console.log(minRange);
         maxRange = price + (price*perMax);
         for(let i = 0; i<noOfGrids; i++){
             let r = Math.pow((maxRange/minRange),1/(noOfGrids-1));
@@ -269,12 +264,11 @@ async function gridStrategy(ind , sym){
         console.log("Buy grids is ",buy_trades);
         // Order for initial buying
         k = buy_trades.length;
-        console.log("k", k);
         var baseCap = wallet.usdt/100;
         var buyMoney = (100-k)* baseCap;
-        console.log(buyMoney);
+        
         var remainingUsd = k * baseCap;
-        console.log(remainingUsd);
+        
         //  wallet after initial buying
         wallet.usdt -= buyMoney;
         wallet.coin += buyMoney/price;
