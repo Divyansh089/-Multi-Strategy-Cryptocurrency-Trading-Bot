@@ -1,4 +1,4 @@
-const api_key = ""; //Generate a API key from https://taapi.io/ insert it into within the quotes
+const api_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbHVlIjoiNjVjYzg5MGUxNDBjZmQ3MjNkYTk5YzVhIiwiaWF0IjoxNzA3OTAzMjQ2LCJleHAiOjMzMjEyMzY3MjQ2fQ.kskaa0ChRD0BzQw66q4hNBiiA3j6fCM2zHDR6zuvD1o"; //Generate a API key from https://taapi.io/ insert it into within the quotes
 const coin_out = document.getElementById("coin_w");
 const usdt_out = document.getElementById("usdt_w");
 const status_out = document.getElementById("status");
