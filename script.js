@@ -111,10 +111,10 @@ async function normalStrategy(ind , sym){
         let per = parseInt(result.substring(0, result.length - 1));
         if (lastChar == "b") {
             if (per == 0) {
-                status_out.innerText = `This is inappropriate time to buy/sell.\nCurrent RSI value = ${rsi_v}`;
+                status_out.innerText = `This is inappropriate time to buy/sell.\nCurrent RSI value = ${rsiValue}`;
                 
             } else {
-                status_out.innerText = `Buy Order.\nCurrent RSI value = ${rsi_v}`;
+                status_out.innerText = `Buy Order.\nCurrent RSI value = ${rsiValue}`;
                 if (wallet.usdt != 0){
                     console.log(wallet.usdt);
                     setTimeout(async () => {
