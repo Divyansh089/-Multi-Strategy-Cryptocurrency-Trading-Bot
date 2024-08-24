@@ -195,7 +195,7 @@ async function call_Grid(coin, ind) {
         if(ind == "rsi"){
             interval = "1d";
         }
-        const url = `https://api.taapi.io/${i}?secret=${api_key}&exchange=binance&symbol=${coin}/USDT&interval=${interval}`;
+        const url = `https://api.taapi.io/${ind}?secret=${api_key}&exchange=binance&symbol=${coin}/USDT&interval=${interval}`;
         
         const response = await fetch(url);
         const data = await response.json();
