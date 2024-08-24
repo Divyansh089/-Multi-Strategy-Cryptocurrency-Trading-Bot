@@ -279,7 +279,7 @@ async function gridStrategy(ind , sym){
     status_out.innerText = "Initializing Bot ...";
     clearInterval(intervalId);
     intervalId = setInterval(() => {
-        action(c_value);
+        action(coinValue);
     }, 60000);
     
     
